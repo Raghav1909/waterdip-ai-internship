@@ -2,8 +2,8 @@ from sqlalchemy import Column, Integer, String
 from database import Base
 
 
-class Hotel(Base):
-    __tablename__ = "hotels"
+class Booking(Base):
+    __tablename__ = "bookings"
 
     id = Column(Integer, primary_key=True)
     hotel = Column(String)

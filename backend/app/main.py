@@ -3,7 +3,7 @@ from database import engine
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import Depends, HTTPException, status, Response
 import models, csv
-from datetime import datetime
+from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 from database import get_db
 from pydantic import BaseModel
@@ -32,7 +32,7 @@ def initialize_database(db:  Session = Depends(get_db)):
         header = next(csvfile)
         reader = csv.reader(csvfile)
 
-        hotels = []
+        bookings = []
         for row in reader:
             if int(row[3]) < 10:
                 row[3] = "0" + row[3]
@@ -43,7 +43,7 @@ def initialize_database(db:  Session = Depends(get_db)):
 
             date = row[1] + "-" + month + "-" + row[3]
 
-            hotel = models.Hotel(
+            booking = models.Booking(
                 hotel=row[0],
                 arrival_date = date,
                 adults=row[4],
@@ -51,9 +51,9 @@ def initialize_database(db:  Session = Depends(get_db)):
                 babies=row[6],
                 country=row[7]
             )
-            hotels.append(hotel)
+            bookings.append(booking)
 
-        db.add_all(hotels)
+        db.add_all(bookings)
         db.commit()
 
     return Response(status_code=status.HTTP_200_OK)
@@ -61,19 +61,54 @@ def initialize_database(db:  Session = Depends(get_db)):
 
 
 # Schema
-class Hotel(BaseModel):
-    hotel: str
-    arrival_date: str
+class VisitorsPerDay(BaseModel):
+    date: str
     adults: int
     children: int
     babies: int
-    country: str
+    total: int
 
-@app.get("/hotels", response_model=list[Hotel])
-def get_hotels_by_date_range(start_date: str = "2015-07-01", end_date: str = "2015-08-09", db: Session = Depends(get_db)):
-    start_date = datetime.strptime(start_date, "%Y-%m-%d")
-    end_date = datetime.strptime(end_date, "%Y-%m-%d")
+@app.get("/visitors/total", response_model=list[VisitorsPerDay])
+def get_total_visitors_in_range(start_date: str = "2015-07-01", end_date: str = "2015-08-09", db: Session = Depends(get_db)):
+    start_year, start_month, start_day = list(map(int,start_date.split('-')))
+    start_date = datetime(start_year, start_month, start_day).date()
+    
+    end_year, end_month, end_day = list(map(int,end_date.split('-')))
+    end_date = datetime(end_year, end_month, end_day).date()
 
-    hotels = db.query(models.Hotel).filter(models.Hotel.arrival_date.between(start_date, end_date)).all()
-    return hotels
 
+    if start_date < datetime(2015, 7, 1).date():
+        start_date = datetime(2015, 7, 1).date()
+    
+    if end_date > datetime(2015, 8, 9).date():
+        end_date = datetime(2015, 8, 9).date()
+    
+    if start_date > end_date:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Start date cannot be greater than end date")
+
+    current_date = start_date
+
+    total_visitors_by_day = []
+
+    while current_date <= end_date:
+        total_people, total_adults, total_children, total_babies = 0, 0, 0, 0
+        bookings = db.query(models.Booking).filter(models.Booking.arrival_date == current_date.strftime("%Y-%m-%d")).all()
+        
+        
+        for i in range(len(bookings)):
+            booking = bookings[i]
+            total_people += booking.adults + booking.children + booking.babies
+            total_adults += booking.adults
+            total_children += booking.children
+            total_babies += booking.babies
+
+        total_visitors_by_day.append(VisitorsPerDay(
+            date=current_date.strftime("%Y-%m-%d"),
+            total=total_people,
+            adults=total_adults,
+            children=total_children,
+            babies=total_babies
+        ))            
+        current_date += timedelta(days=1)
+
+    return total_visitors_by_day

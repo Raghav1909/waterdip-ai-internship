@@ -1,34 +1,37 @@
-import Chart from "react-apexcharts";
+import { useEffect, useState } from "react";
+import TimeSeriesChart from "./components/TimeSeriesChart";
 
-let options = {
-  chart: {
-    id: "basic-bar"
-  },
-  xaxis: {
-    categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998]
-  }
-}
+import './app.css'
 
-let series = [
-  {
-    name: "series-1",
-    data: [30, 40, 45, 50, 49, 60, 70, 91]
-  }
-]
+export default function App() {
+  const [visitorsPerDay, setVisitorsPerDay] = useState<any[]>([])
+  const [startDate, setStartDate] = useState('2015-07-01')
+  const[endDate, setEndDate] = useState('2015-08-09')
 
+  useEffect(() => {
+    let fetchData = async() => {
+      try{
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/visitors/total?startDate=${startDate}&endDate=${endDate}`)
+        const data = await response.json()
+        setVisitorsPerDay(data)
+      }
+      catch(error){
+        console.error('Error fetching data', error)
+        alert('Error fetching data')
+      }
+    }
+    fetchData()
+  }, [startDate, endDate])
+  
+  let totalVisitors: any = Array.from(visitorsPerDay, (item) => ({
+    x: new Date(item.date),
+    y: item.total
+  }))
 
-function App() {
   return (
-    <>
-      <h1>Hello World!</h1>
-      <Chart
-        options= {options}
-        series= {series}
-        type="bar"
-        width="500"
-        />
-    </>
-  );
+    <div className = "container">
+      <h1>Waterdip Internship Assignment</h1>
+      <TimeSeriesChart visitorsData = {totalVisitors}/>
+    </div>
+  )
 }
-
-export default App;
