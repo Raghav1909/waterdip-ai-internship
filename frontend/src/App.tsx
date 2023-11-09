@@ -41,10 +41,12 @@ export default function App() {
         window.location.reload()
         return
       }
+      if(response.ok){
+        const data = await response.json();
+        setCountries(data.countries);
+        setVisitorPercentage(data.visitorPercentage);
+      }
       
-      const data = await response.json();
-      setCountries(data.countries);
-      setVisitorPercentage(data.visitorPercentage);
     } catch (error) {
       console.error('Error fetching data', error);
       alert('Error fetching data');
