@@ -14,6 +14,25 @@ const ColumnChart: React.FC<Props> = ({countries, visitorPercentage}) => {
 				height: 350,
 				width:'100%'
 		},
+		plotOptions: {
+		bar: {
+			borderRadius: 10,
+			dataLabels: {
+				position: 'top', // top, center, bottom
+				},
+			}
+		},
+		dataLabels: {
+			enabled: true,
+			offsetY: -20,
+			formatter: function (val) {
+				return val + "%";
+			},
+			style: {
+				fontSize: '12px',
+				colors: ["#304758"]
+			}
+		},
 		title: {
 			text: 'Total Visitors',
 			align: 'center',
@@ -53,12 +72,6 @@ const ColumnChart: React.FC<Props> = ({countries, visitorPercentage}) => {
 			axisTicks: {
 				show: false,
 			},
-			labels: {
-				show: false,
-				formatter: function (val) {
-					return val + "%";
-				}
-			}
 		},
 	}
     
