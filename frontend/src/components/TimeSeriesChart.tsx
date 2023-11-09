@@ -18,6 +18,9 @@ const TimeSeriesChart: React.FC<Props> = ({ visitorsData }) => {
     title: {
       text: 'Number of Visitors per day',
       align: 'center',
+      style: {
+        fontSize: '24px',
+      }
     },
     yaxis: {
       title: {

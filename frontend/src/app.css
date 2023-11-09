@@ -5,9 +5,22 @@ h1{
     text-transform: uppercase;
     text-decoration: underline;
 }
-.container{
+
+.container > *{
+    padding: 1em;
+    margin-bottom: 1em;
+}
+
+.sparkline{
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    gap: 4em;
     padding: 0 4em;
-    gap: 1em;
+    margin-bottom: 2em;
+    justify-content: center;
+    align-items: center;
+}
+
+.sparkline > *{
+    width: 100% !important;
 }
