@@ -1,7 +1,6 @@
 import ReactApexChart from "react-apexcharts";
 import { ApexOptions } from 'apexcharts';
 
-
 interface Props {
   name: string
   data: number[]

@@ -8,7 +8,7 @@ interface Props {
 }
 
 
-const TimeSeriesChart: React.FC<Props> = ({ visitorsData }) => {
+const TimeSeriesChart: React.FC<Props> = ({visitorsData }) => {
   const options: ApexOptions = {
     chart: {
       type: 'area',
