@@ -2,6 +2,8 @@
 
 This project is an internship assignment for Waterdip AI built with React for the frontend and FastAPI for the backend. It includes visualizing hotel booking data using ApexCharts.
 
+Built by [Pranav K Bhaskar](https://www.linkedin.com/in/pranav-k-bhaskar/).
+
 ## Getting Started
 - Clone the repository: `git clone https://github.com/Raghav1909/waterdip-ai-internship.git`
 
