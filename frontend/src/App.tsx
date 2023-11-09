@@ -38,9 +38,7 @@ export default function App() {
       
       if(response.status === 400){
         alert('Date out of range!');
-        setTimeout(() => {
-          window.location.reload()
-        }, 1000)
+        window.location.reload()
         return
       }
       
