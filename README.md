@@ -18,5 +18,6 @@ This project is an internship assignment for Waterdip AI built with React for th
   - On Windows: `waterdip\Scripts\activate`
   - On macOS/Linux: `source waterdip/bin/activate`
 - Install the required dependencies: `pip install -r requirements.txt`
+- Navigate to the app directory: `cd app`
 - Run the backend server: `uvicorn app.main:app --reload`
 - The API documentation can be accessed at: `http://localhost:8000/docs`
