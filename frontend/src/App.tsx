@@ -35,6 +35,13 @@ export default function App() {
   const fetchCountries = async () => {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/visitors/country?start_date=${startDate}&end_date=${endDate}`);
+      
+      if(response.status === 400){
+        alert('Date out of range!');
+        window.location.reload()
+        return
+      }
+      
       const data = await response.json();
       setCountries(data.countries);
       setVisitorPercentage(data.visitorPercentage);
