@@ -23,3 +23,4 @@ Built by [Pranav K Bhaskar](https://www.linkedin.com/in/pranav-k-bhaskar/).
 - Navigate to the app directory: `cd app`
 - Run the backend server: `uvicorn app.main:app --reload`
 - The API documentation can be accessed at: `http://localhost:8000/docs`
+- To run Python tests, run: `pytest`
